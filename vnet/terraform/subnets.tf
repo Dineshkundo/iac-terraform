@@ -1,0 +1,34 @@
+######   SUBNET ######
+resource "azurerm_subnet" "subnets" {
+  for_each = var.subnets
+
+  name                 = each.key
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = var.vnet_name
+  address_prefixes     = each.value.address_prefixes
+
+  service_endpoints = lookup(each.value, "service_endpoints", [])
+
+  dynamic "delegation" {
+    for_each = lookup(each.value, "delegations", [])
+    content {
+      name = delegation.value.name
+
+      service_delegation {
+        name    = delegation.value.service_name
+        actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+      }
+    }
+  }
+
+  lifecycle {
+    prevent_destroy = true
+    # Prevent Terraform from trying to remove or reassign live route table associations
+    # (we want Terraform to reflect Azure, not modify association accidentally)
+    ignore_changes = [
+      delegation,
+      service_endpoints
+    ]
+  }
+}
+
