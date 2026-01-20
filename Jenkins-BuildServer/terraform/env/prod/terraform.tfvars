@@ -30,7 +30,7 @@ image_sku       = "22_04-lts-gen2"
 image_version   = "latest"
 
 # SSH public key
-ssh_key_path = "/home/jenkinsadmin/.ssh/authorized_keys"
+# ssh_key_path = "/home/jenkinsadmin/.ssh/authorized_keys"
 
 tags = {
   environment = "prod"
