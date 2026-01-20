@@ -8,7 +8,10 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = var.address_space
   lifecycle {
     prevent_destroy = true
-    ignore_changes = [tags]
+    ignore_changes = [
+       tags,  
+       encryption
+        ]
   }
 }
 

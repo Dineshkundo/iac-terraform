@@ -57,18 +57,7 @@ variable "access_tier" {
   type = string
 }
 
-# Routing preference
-variable "routing_choice" {
-  type = string
-}
 
-variable "publish_microsoft_endpoints" {
-  type = bool
-}
-
-variable "publish_internet_endpoints" {
-  type = bool
-}
 
 # Network ACL rules
 variable "default_network_action" {

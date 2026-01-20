@@ -1,25 +1,9 @@
-cat << 'EOF' > .gitignore
-# Terraform
 .terraform/
-**/.terraform/
 *.tfstate
 *.tfstate.*
-terraform.tfstate.d/
-*.tfvars
-*.tfvars.json
-
-# Terraform CLI config
-.terraformrc
-terraform.rc
-
-# Keys
+crash.log
+override.tf
+override.tf.json
+.terraform.lock.hcl
 *.pem
 *.key
-id_rsa
-id_ed25519
-
-# OS files
-.DS_Store
-Thumbs.db
-EOF
-

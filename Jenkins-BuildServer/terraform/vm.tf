@@ -18,12 +18,12 @@ resource "azurerm_linux_virtual_machine" "vm" {
     public_key = data.local_file.ssh_key.content
   }
 
-  os_disk {
-    name                 = var.os_disk_name
-    caching              = var.os_disk_caching
-    storage_account_type = var.os_disk_storage_account_type
-    disk_size_gb         = var.os_disk_size_gb
-  }
+os_disk {
+  name                 = data.azurerm_managed_disk.os_disk.name
+  caching              = "ReadWrite"   
+  storage_account_type = data.azurerm_managed_disk.os_disk.storage_account_type
+  disk_size_gb         = data.azurerm_managed_disk.os_disk.disk_size_gb
+}
 
   source_image_reference {
     publisher = var.image_publisher

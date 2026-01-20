@@ -10,6 +10,6 @@ output "os_disk_id" {
 }
 
 output "data_disk1_id" {
-  value = data.azurerm_managed_disk.data_disk1.id
+  value = var.data_disk_id == "" ? null : data.azurerm_managed_disk.data_disk1[0].id
 }
 

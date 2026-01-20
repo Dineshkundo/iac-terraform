@@ -2,24 +2,26 @@ resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  dns_prefix          = var.aks_name
+  dns_prefix          = var.dns_prefix
 
-  kubernetes_version = values(var.agent_pools)[0].orchestrator_version
+  kubernetes_version = var.kubernetes_version
+
+  sku_tier = "Standard"
 
   identity {
     type = "SystemAssigned"
   }
   
   default_node_pool {
-    name                = "linuxpool"
-    vm_size             = var.agent_pools["linuxpool"].vm_size
-    node_count          = var.agent_pools["linuxpool"].count
-    min_count           = var.agent_pools["linuxpool"].min_count
-    max_count           = var.agent_pools["linuxpool"].max_count
+    name                = "prodnodepool"
+    vm_size             = var.agent_pools["prodnodepool"].vm_size
+    node_count          = var.agent_pools["prodnodepool"].count
+    min_count           = var.agent_pools["prodnodepool"].min_count
+    max_count           = var.agent_pools["prodnodepool"].max_count
 
-    vnet_subnet_id = var.agent_pools["linuxpool"].subnet_id
-    max_pods       = var.agent_pools["linuxpool"].max_pods
-    os_disk_size_gb = var.agent_pools["linuxpool"].os_disk_size_gb
+    vnet_subnet_id = var.agent_pools["prodnodepool"].subnet_id
+    max_pods       = var.agent_pools["prodnodepool"].max_pods
+    os_disk_size_gb = var.agent_pools["prodnodepool"].os_disk_size_gb
   }
   
   azure_active_directory_role_based_access_control {
@@ -46,34 +48,46 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   oidc_issuer_enabled     = true
   workload_identity_enabled = true
+
 lifecycle {
-    prevent_destroy = true
+  prevent_destroy = true
 
-    # 🚫 Tell Terraform: "Do NOT try to change any of this stuff."
-    ignore_changes = [
-      # 🔑 the LAST remaining drift sources
-      node_os_upgrade_channel,
-      azure_active_directory_role_based_access_control,
-      
-      # top-level flags
-      azure_policy_enabled,
-      cost_analysis_enabled,
-      http_application_routing_enabled,
-      local_account_disabled,
-      open_service_mesh_enabled,
-      tags,
+  ignore_changes = [
+    # Azure auto-managed identity rotation
+    identity,
 
-      # whole blocks we don't want to touch
-      default_node_pool,
-      auto_scaler_profile,
-      linux_profile,
-      windows_profile,
-      microsoft_defender,
-      monitor_metrics,
-      network_profile,
-      oms_agent,
-      kubelet_identity,
-    ]
-  }
+    # AAD / RBAC fields Azure mutates
+    azure_active_directory_role_based_access_control,
+    azure_policy_enabled,
+    local_account_disabled,
+
+    # Azure injects defaults into these
+    http_application_routing_enabled,
+    open_service_mesh_enabled,
+    cost_analysis_enabled,
+    kubernetes_version,
+    node_os_upgrade_channel,
+
+    # OS/Node pool drift
+    default_node_pool,
+    linux_profile,
+    windows_profile,
+
+    # OMS / Monitoring
+    oms_agent,
+    microsoft_defender,
+    monitor_metrics,
+
+    # Network drift fields Azure changes
+    network_profile,
+    network_profile[0].load_balancer_profile,
+    network_profile[0].pod_cidrs,
+    network_profile[0].service_cidrs,
+
+    # Azure automatically injects these tags
+    tags
+  ]
+ }
+
 }
 

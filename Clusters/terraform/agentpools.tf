@@ -1,6 +1,6 @@
 resource "azurerm_kubernetes_cluster_node_pool" "pools" {
   for_each = {
-    for k, v in var.agent_pools : k => v if k != "linuxpool"
+    for k, v in var.agent_pools : k => v if k != "prodnodepool"
   }
 
   name                  = each.key
@@ -25,13 +25,22 @@ resource "azurerm_kubernetes_cluster_node_pool" "pools" {
 
 lifecycle {
   prevent_destroy = true
+
   ignore_changes = [
-    os_disk_type,
+     # Azure changes these dynamically
+    node_labels,
+    node_taints,
+    orchestrator_version,
+    max_pods,
     auto_scaling_enabled,
     upgrade_settings,
+
+    # Azure modifies this sometimes
+    os_disk_type,
+
+    # Azure injects tags
     tags,
-  ]
+ ]
 }
 
 }
-

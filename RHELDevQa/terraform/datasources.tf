@@ -11,6 +11,7 @@ data "azurerm_managed_disk" "os_disk" {
   resource_group_name = local.os_disk_rg
 }
 data "azurerm_managed_disk" "data_disk1" {
+  count               = var.data_disk_id == "" ? 0 : 1
   name                = local.data_disk_name
   resource_group_name = local.data_disk_rg
 }
