@@ -12,7 +12,7 @@ resource "azurerm_virtual_machine_extension" "enablevmaccess" {
 
   protected_settings = jsonencode({
     username    = var.admin_username
-    ssh_key     = data.local_file.ssh_key.content
+    # ssh_key     = data.local_file.ssh_key.content
     reset_ssh   = "true"
     remove_user = "false"
     expiration  = "9999-12-31T23:59:59Z"
