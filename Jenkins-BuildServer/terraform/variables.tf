@@ -22,7 +22,7 @@ variable "zone"    { type = string }
 
 
 # SSH public key file path (not the key)
-variable "ssh_key_path"   { type = string }
+# variable "ssh_key_path"   { type = string }
 variable "admin_username" { type = string }
 
 

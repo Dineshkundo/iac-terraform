@@ -13,10 +13,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   disable_password_authentication = true
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = data.local_file.ssh_key.content
-  }
+  # admin_ssh_key {
+  #   username   = var.admin_username
+  #   public_key = data.local_file.ssh_key.content
+  # }
 
 os_disk {
   name                 = data.azurerm_managed_disk.os_disk.name

@@ -8,9 +8,9 @@ data "azurerm_managed_disk" "os_disk" {
   resource_group_name = var.resource_group_name
 }
 
-data "local_file" "ssh_key" {
-  filename = var.ssh_key_path
-}
+# data "local_file" "ssh_key" {
+#   filename = var.ssh_key_path
+# }
 
 # Optional – if no data disk leave this
 data "azurerm_managed_disk" "data_disk1" {
