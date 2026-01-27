@@ -23,4 +23,3 @@ image_version   = "latest"
 tags = {
   service = "kafka"
 }
-
