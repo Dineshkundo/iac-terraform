@@ -1,0 +1,10 @@
+    resource_group_name  = "CODA-PROD-RG"
+    storage_account_name = "codaprodsa"
+    container_name       = "tfstate"
+    key                  = "prod/vm/RHEL-PROD-KAFKA/RHEL-PROD-KAFKA.tfstate"
+
+    use_azuread_auth = true
+    use_msi          = true
+
+    subscription_id = "072f61b4-efbf-4a3a-9f78-9ce578e1c75d"
+    tenant_id       = "2eb52881-f5b4-4855-9142-cd907aa33267"
